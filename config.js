@@ -40,9 +40,11 @@ var config =
     ip: '127.0.0.1',
 
     // authentication methods so far: courier, htaccess
-    auth_method: 'htaccess',
+    auth_method: 'api',
     auth_method_courier_socket: '/var/run/courier/authdaemon/socket',
     auth_method_htaccess_file: 'demouser.htaccess',
+    auth_method_api_server: 'localhost',
+    auth_method_api_session_path: '/api/1/user/sessions',
 
     // db specific configuration. you can use whatever sequelize supports.
     db_name: 'fennel',

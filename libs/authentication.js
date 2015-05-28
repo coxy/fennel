@@ -14,6 +14,8 @@ var config = require('../config').config;
 var htpasswd = require('htpasswd');
 var fs = require('fs');
 var path = require('path');
+//var https = require('https');
+var http = require('http');
 
 function checkLogin(username, password, callback)
 {
@@ -27,6 +29,10 @@ function checkLogin(username, password, callback)
 
         case 'htaccess':
             checkHtaccess(username, password, callback);
+            break;
+
+        case 'api':
+            checkApi(username, password, callback);
             break;
 
         default:
@@ -117,6 +123,43 @@ function checkCourier(username, password, callback)
         var result = response.indexOf('FAIL', 0);
         callback(result < 0);
     });
+}
+
+function checkApi(username, password, callback)
+{
+    log.debug("Authenticating user with api method.");
+
+    var postData = {
+        email: username,
+        password: password
+    }
+
+    var postDataString = JSON.stringify(postData);
+
+    var options = {
+        host: config.auth_method_api_server,
+        port: 80,
+        path: config.auth_method_api_session_path,
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Content-Length': postDataString.length
+        }
+    }
+
+    var req = http.request(options, function(res) {
+      log.debug('STATUS: ' + res.statusCode);
+      log.debug('HEADERS: ' + JSON.stringify(res.headers));
+      res.setEncoding('utf8');
+      res.on('data', function (chunk) {
+        log.debug('BODY: ' + chunk);
+        callback(res.statusCode === 200);
+      });
+    });
+
+    // write data to request body
+    req.write(postDataString);
+    req.end();
 }
 
 // Exporting.
