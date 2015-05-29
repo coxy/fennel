@@ -43,7 +43,7 @@ var config =
     auth_method: 'api',
     auth_method_courier_socket: '/var/run/courier/authdaemon/socket',
     auth_method_htaccess_file: 'demouser.htaccess',
-    auth_method_api_server: 'localhost',
+    auth_method_api_server: 'journl-api-sandbox-1.elasticbeanstalk.com',
     auth_method_api_session_path: '/api/1/user/sessions',
 
     // db specific configuration. you can use whatever sequelize supports.
